@@ -16,8 +16,9 @@ namespace BlogCore.Models
         [Display(Name = "Nombre de Categoria")]
         public string Nombre { get; set; }
 
+        [Range(1,100,ErrorMessage ="El valor debe estar entre 1 y 100")]
         [Display(Name = "Orden de visualización")]
-        public int Orden {  get; set; }
+        public int? Orden {  get; set; }
 
     }
 }

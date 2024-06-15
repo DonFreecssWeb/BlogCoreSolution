@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
+
 namespace BlogCore.AccesoDatos
 {
     public class ApplicationDbContext : IdentityDbContext
@@ -12,5 +13,6 @@ namespace BlogCore.AccesoDatos
         }
 
         public DbSet<Categoria> Categoria { get; set; }
+        public DbSet<Articulo> Articulo { get; set; }
     }
 }
