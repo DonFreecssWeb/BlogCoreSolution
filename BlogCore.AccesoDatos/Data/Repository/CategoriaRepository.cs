@@ -1,5 +1,6 @@
 ﻿using BlogCore.AccesoDatos.Data.Repository.IRepository;
 using BlogCore.Models;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +18,16 @@ namespace BlogCore.AccesoDatos.Data.Repository
         {
             _db = db;
         }
+
+        public IEnumerable<SelectListItem> GetListaCategorias()
+        {
+            return _db.Categoria.Select(temp => new SelectListItem()
+            {
+                Text = temp.Nombre,
+                Value = temp.Id.ToString()
+            }) ;
+        }
+
         public void Update(Categoria categoria)
         {
             var categoriaToUpdate = _db.Categoria.FirstOrDefault(s => s.Id == categoria.Id);
