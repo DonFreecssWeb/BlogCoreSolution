@@ -1,16 +1,17 @@
 ﻿@model BlogCore.Models.ViewModels.ArticuloVM
 
 @{
-    ViewData["Title"] = "Crear Articulo";
+    ViewData["Title"] = "Editar Articulo";
 }
 <br />
 <br />
 
-<h3>Crear una nuevo artículo</h3>
-<form asp-action="Create" method="post" enctype="multipart/form-data">
+<h3>Editar artículo</h3>
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Articulo.Id"/>
     <div class="row px-2 offset-1 border">
         <div asp-validation-summary="All" class="text-danger"></div>
-        <div class="col-10 offset-1 mt-4">
+        <div class="col-8 mt-4">
             <div class="form-group row mb-3">
                 <div class="col-4">
                     <label asp-for="Articulo.Nombre"></label>
@@ -25,7 +26,7 @@
                     <label asp-for="Articulo.Descripcion"></label>
                 </div>
                 <div class="col-8">
-                    <textarea asp-for="Articulo.Descripcion" class="form-control" style="height:300"></textarea>
+                    <textarea asp-for="Articulo.Descripcion" class="form-control" style="height:300px"></textarea>
                     <span asp-validation-for="Articulo.Descripcion" class="text-danger"></span>
                 </div>
             </div>
@@ -36,16 +37,16 @@
                 </div>
                 <div class="col-8">
                     @Html.DropDownListFor(m => m.Articulo.CategoriaID, Model.ListaCategorias,
-                    "--Seleccione una categoría--",new { @class = "form-control" })
+                             "--Seleccione una categoría--", new { @class = "form-control" })
                     <span asp-validation-for="Articulo.CategoriaID" class="text-danger"></span>
 
                     @* <select class="form-control"  >
-                        <option value="0">--Seleccione una categoría--</option>
-                        @foreach (var item in Model.ListaCategorias)
-                        {
-                            <option value="@item.Value">@item.Text</option>
-                        }
-                    </select>                  
+                    <option value="0">--Seleccione una categoría--</option>
+                    @foreach (var item in Model.ListaCategorias)
+                    {
+                    <option value="@item.Value">@item.Text</option>
+                    }
+                    </select>
                     <span asp-validation-for="Articulo.CategoriaID" class="text-danger"></span>
                     *@
                 </div>
@@ -56,15 +57,24 @@
                     <label asp-for="Articulo.UrlImagen"></label>
                 </div>
                 <div class="col-8">
-                    <input type="file" class="form-control" asp-for="Articulo.UrlImagen" id="subidaArchivo" />
+                    <input type="file" class="form-control" name="archivos" id="subidaArchivo" />
                     <span asp-validation-for="Articulo.UrlImagen" class="text-danger"></span>
                 </div>
             </div>
-            <div>
-                <div class="col-8">
-                    <partial name="_VistaCrearVolver"></partial>
+
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary form-control"> Editar Artículo</button>
+                </div>
+                &nbsp;
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success form-control">Volver atrás</a>
                 </div>
             </div>
+        </div>
+
+        <div class="col-4 pt-3">
+            <img src="@Model.Articulo.UrlImagen" width="300px" style="border-radius:5px; border: 1px solid #bbb9b9" alt="imagen" />
         </div>
     </div>
 
@@ -84,7 +94,7 @@
                 'lists'
             ],
             menubar: 'file edit format'
-           
+
         });
     </script>
 }

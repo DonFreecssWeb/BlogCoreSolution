@@ -3,7 +3,7 @@ using BlogCore.Models;
 using BlogCore.Models.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-
+using System.IO;
 namespace BlogCore.Areas.Admin.Controllers
 {
      [Area("Admin")]
@@ -80,24 +80,78 @@ namespace BlogCore.Areas.Admin.Controllers
         }
 
         // GET: ArticulosController/Edit/5
-        public ActionResult Edit(int id)
+        [HttpGet]
+        public IActionResult Edit(int? id)
         {
-            return View();
+            ArticuloVM artiVM = new ArticuloVM()
+            {
+                Articulo = new Models.Articulo(),
+                ListaCategorias = _contenedorTrabajo.Categoria.GetListaCategorias()
+            };
+            if(id != null)
+            {
+                artiVM.Articulo = _contenedorTrabajo.Articulo.GetById(id.GetValueOrDefault());
+            }
+            return View(artiVM);
         }
 
         // POST: ArticulosController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Edit(ArticuloVM articuloVM)
         {
-            try
+            if (ModelState.IsValid)
             {
+                string rutaPrincipal = _webHostEnvironment.WebRootPath;
+                var archivos = HttpContext.Request.Form.Files;
+
+                var articuloToUpdate = _contenedorTrabajo.Articulo.GetById(articuloVM.Articulo.Id);
+
+                
+                //validamos si se subió un archivo, porque se quiere reemplazar la imagen
+                //cuando se sube un archivo nuevo
+                if (archivos.Count() > 0)
+                {
+                    //nueva imagen para el artículo
+                    string nombreArchivo = Guid.NewGuid().ToString();
+                    var subidas = Path.Combine(rutaPrincipal, @"imagenes\articulos");
+                    var extension = Path.GetExtension(archivos[0].FileName);
+                    var nuevaExtension = Path.GetExtension(archivos[0].FileName);
+
+                    var rutaImagen = Path.Combine(rutaPrincipal, articuloToUpdate.UrlImagen.TrimStart('\\'));
+                    //borrar la imagen anterior
+                    if (System.IO.File.Exists(rutaImagen))
+                    {
+                        System.IO.File.Delete(rutaImagen);
+                    }
+                    //nuevamente subimos el archivo
+                    using (var fileStreams = new FileStream(Path.Combine(subidas, nombreArchivo + extension), FileMode.Create))
+                    {
+                        archivos[0].CopyTo(fileStreams);
+                    }
+                    articuloVM.Articulo.UrlImagen = @"imagenes\articulos\" + nombreArchivo + extension;
+                    articuloVM.Articulo.FechaCreacion = DateTime.Now;
+
+
+                    _contenedorTrabajo.Articulo.Update(articuloVM.Articulo);
+                    _contenedorTrabajo.Save();
+
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {//cuando no queremos subir un archivo nuevo
+                    articuloVM.Articulo.UrlImagen =articuloToUpdate.UrlImagen;
+                }
+                _contenedorTrabajo.Articulo.Update(articuloVM.Articulo);
+                _contenedorTrabajo.Save();
+
                 return RedirectToAction(nameof(Index));
+
             }
-            catch
-            {
-                return View();
-            }
+            //si todo falla se regresa al Create GET y pasamos el artiVM
+            //para no perder la lista de categorias para el dropdown
+            articuloVM.ListaCategorias = _contenedorTrabajo.Categoria.GetListaCategorias();
+            return View(articuloVM);
         }
 
         // GET: ArticulosController/Delete/5
@@ -122,6 +176,16 @@ namespace BlogCore.Areas.Admin.Controllers
         {
 
             var articuloFromDb = _contenedorTrabajo.Articulo.GetById(id);
+            //borrarmos la imagen de la carpeta
+            string rutaDirectorioPrincipal = _webHostEnvironment.WebRootPath;
+            var rutaImagen = Path.Combine(rutaDirectorioPrincipal, articuloFromDb.UrlImagen.TrimStart('\\'));
+
+            //si existe el archivo lo borramos
+            if (System.IO.File.Exists(rutaImagen))
+            {
+                System.IO.File.Delete(rutaImagen);
+            }
+
             if (articuloFromDb == null)
             {
                 return Json(new { success = false, message = "Error borrando articulo" });
