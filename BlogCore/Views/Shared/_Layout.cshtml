@@ -52,6 +52,12 @@
             </div>
         </nav>
         
+        <!-- Vista Parcial Slider-->
+        @if (ViewBag.isHome == true)
+        {
+            <partial name="_Slider"></partial>
+        }
+            
     </header>
     <div class="container">
         <main role="main" class="pb-3">
