@@ -1,0 +1,65 @@
+﻿@model BlogCore.Models.ViewModels.SliderVM
+
+@{
+    ViewData["Title"] = "Editar Slider";
+}
+<br />
+<br />
+
+<h3>Editar slider</h3>
+<form asp-action="Edit" method="post" enctype="multipart/form-data">
+    <div class="row px-2 border">
+        <div asp-validation-summary="All" class="text-danger"></div>
+        <input type="hidden" asp-for="Id" />
+        <div class="col-8  mt-4">
+            <div class="form-group row mb-3">
+                <div class="col-4">
+                    <label asp-for="Nombre"></label>
+                </div>
+                <div class="col-8">
+                    <input asp-for="Nombre" class="form-control" placeholder="Ingresa el nombre" />
+                    <span asp-validation-for="Nombre" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row mb-3">
+                <div class="col-4">
+                    <label asp-for="Estado"></label>
+                </div>
+                <div class="col-8">
+                    <input class="form-check" asp-for="Estado" />
+
+                    <span asp-validation-for="Estado" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="form-group row mb-3">
+                <div class="col-4">
+                    <label asp-for="UrlImagen"></label>
+                </div>
+                <div class="col-8">
+                    <input type="file" class="form-control" name="subidas" id="subidaArchivo" />
+                    <span asp-validation-for="UrlImagen" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col">
+                    <button type="submit" class="btn btn-primary form-control"> Editar Slider</button>
+                </div>
+                &nbsp;
+                <div class="col">
+                    <a asp-action="Index" class="btn btn-success form-control">Volver atrás</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <img src="@Model.UrlImagen" width="300px" />
+        </div>
+    </div>
+
+</form>
+
+@* Validaciones del lado del cliente *@
+@section Scripts {
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+}
