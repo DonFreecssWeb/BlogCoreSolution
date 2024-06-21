@@ -42,6 +42,7 @@ namespace BlogCore.Areas.Identity.Pages.Account
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
             IEmailSender emailSender,
+
             RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
@@ -76,7 +77,7 @@ namespace BlogCore.Areas.Identity.Pages.Account
         ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
         ///     directly from your code. This API may change or be removed in future releases.
         /// </summary>
-        public class InputModel : IdentityUser
+        public class InputModel 
         {
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -106,6 +107,9 @@ namespace BlogCore.Areas.Identity.Pages.Account
             [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
             public string ConfirmPassword { get; set; }
 
+            [Required(ErrorMessage = "El teléfono es obligatorio")]
+            public string PhoneNumber { get; set; }
+
             //campos custom del ApplicationUser
             [Required(ErrorMessage = "El nombre es obligatorio")]
             public string Nombre { get; set; }
@@ -134,6 +138,12 @@ namespace BlogCore.Areas.Identity.Pages.Account
             if (ModelState.IsValid)
             {
                 var user = CreateUser();
+                //guardamos los campos personalizados
+                user.Nombre = Input.Nombre;
+                user.Direccion = Input.Direccion;
+                user.Ciudad = Input.Ciudad;
+                user.Pais = Input.Pais;
+                user.PhoneNumber = Input.PhoneNumber;
 
                 await _userStore.SetUserNameAsync(user, Input.Email, CancellationToken.None);
                 await _emailStore.SetEmailAsync(user, Input.Email, CancellationToken.None);
@@ -155,15 +165,16 @@ namespace BlogCore.Areas.Identity.Pages.Account
                     string rol = Request.Form["radUsuarioRole"].ToString();
 
                     //Validamos si el rol seleccionado es Administrador y si lo es lo agregamos
-                    if(rol == CNT.Administrador)
+                    //el usuario cliente no verá la opción de elegir el rol por lo que el rol por default
+                    //será cliente
+                    if (rol == CNT.Administrador)
                     {
                         await _userManager.AddToRoleAsync(user, CNT.Administrador);
-                    }
-                    if(rol == CNT.Registrado)
+                    }else if(rol == CNT.Registrado)
                     {
                         await _userManager.AddToRoleAsync(user,CNT.Registrado);
                     }
-                    if(rol == CNT.Cliente)
+                   else
                     {
                         await _userManager.AddToRoleAsync(user, CNT.Cliente);
                     }

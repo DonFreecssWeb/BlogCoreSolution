@@ -1,10 +1,14 @@
 ﻿using BlogCore.AccesoDatos.Data.Repository.IRepository;
 using BlogCore.Models;
+using BlogCore.Utilidades;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BlogCore.Areas.Admin.Controllers
 {
     [Area("Admin")]
+    [Authorize(Roles = nameof(CNT.Administrador))]
+   
     public class CategoriasController : Controller
     {
         private readonly IContenedorTrabajo _contenedorTrabajo;
@@ -19,6 +23,7 @@ namespace BlogCore.Areas.Admin.Controllers
             return View();
         }
         [HttpGet]
+        //[AllowAnonymous]
         public IActionResult Create()
         {
 
