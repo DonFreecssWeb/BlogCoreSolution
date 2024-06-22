@@ -4,6 +4,7 @@ using BlogCore.Models.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Metadata;
 using System.Diagnostics;
+using System.Drawing.Printing;
 
 namespace BlogCore.Areas.Cliente.Controllers
 {
@@ -17,15 +18,54 @@ namespace BlogCore.Areas.Cliente.Controllers
             _contenedorTrabajo = contenedorTrabajo;
         }
 
-        public IActionResult Index()
+        //Pagina de inicio sin paginación
+        //public IActionResult Index()
+        //{
+        //    HomeVM homeVM = new HomeVM()
+        //    {
+        //        Sliders = _contenedorTrabajo.Slider.GetAll(),
+        //        Articulos = _contenedorTrabajo.Articulo.GetAll()                
+        //    };
+        //    ViewBag.isHome = true;
+        //    return View(homeVM);
+        //}
+
+        //Pagina de inicio con paginación
+        public IActionResult Index(int page = 1, int pageSize = 6)
         {
+            var articulos = _contenedorTrabajo.Articulo.AsQueryable();
+            //page empieza en 1 por eso lo restamos
+            //pageSize es la cantidad de elementos por página
+            var paginasEntries = articulos.Skip((page - 1) * pageSize).Take(pageSize);
             HomeVM homeVM = new HomeVM()
             {
                 Sliders = _contenedorTrabajo.Slider.GetAll(),
-                Articulos = _contenedorTrabajo.Articulo.GetAll()                
-            };
+                Articulos = paginasEntries.ToList(),
+                PageIndex = page,
+                TotalPages = (int)Math.Ceiling(articulos.Count() / (double)pageSize)
+             };
+
+            
             ViewBag.isHome = true;
             return View(homeVM);
+        }
+
+        //buscador
+        [HttpGet]
+        public IActionResult ResultadoBusqueda(string searchString, int page = 1, int pageSize = 6)
+        {
+            var articulos = _contenedorTrabajo.Articulo.AsQueryable();
+            if(!string.IsNullOrEmpty(searchString))
+            {
+                articulos = articulos.Where(e => e.Nombre.Contains(searchString));
+            }
+            //page empieza en 1 por eso lo restamos
+            //pageSize es la cantidad de elementos por página
+            var paginasEntries = articulos.Skip((page - 1) * pageSize).Take(pageSize);
+
+            //crear modelo para la vista
+            ListaPaginadaVM<Articulo> listaPaginadaVM = new ListaPaginadaVM<Articulo>(paginasEntries.ToList(),articulos.Count(),page,pageSize,searchString);
+            return View(listaPaginadaVM);
         }
 
         [HttpGet]

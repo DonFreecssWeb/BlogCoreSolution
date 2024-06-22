@@ -21,21 +21,27 @@ function cargarDatatable() {
                     return `<img src ="../${imagen}" width="120"/>`
                 }
             },
-            { data: "fechaCreacion", width: "25%" },
+            {
+                data: "fechaCreacion", width: "15%",
+                render: function (data) {
+                    var date = new Date(data)
+                    return `${date.toLocaleDateString()}`
+                }
+            },           
             {
                 data: "id",
                 render: function (data) {
                     return `<div class="text-center">
-                                <a href="/Admin/Articulos/Edit/${data}" class="btn btn-success text-white" style="cursor:pointer; width:140px">
+                                <a href="/Admin/Articulos/Edit/${data}" class="btn btn-success text-white" style="cursor:pointer; width:150px">
                                 <i class="far fa-edit"></i> Editar </a>
                                 &nbsp;
-                                <a onclick=Delete("/Admin/Articulos/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer; width:140px">
+                                <a onclick=Delete("/Admin/Articulos/Delete/${data}") class="btn btn-danger text-white" style="cursor:pointer; width:150px">
                                 <i class="far fa-trash-alt"></i> Borrar </a>
                             </div>
                     `;
-                }, width: "40%"
+                }, width: "50%"
             }
-        ],
+        ],        
         "language": {
             "decimal": "",
             "emptyTable": "No hay registros",

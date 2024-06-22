@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System.IO;
+using System.Net;
 namespace BlogCore.Areas.Admin.Controllers
 {
      [Area("Admin")]
@@ -42,7 +43,7 @@ namespace BlogCore.Areas.Admin.Controllers
         //recibe articulo + categoria
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create(ArticuloVM articuloVM)
+        public ActionResult Create( ArticuloVM articuloVM)
         {
            
             if (ModelState.IsValid)
@@ -101,8 +102,12 @@ namespace BlogCore.Areas.Admin.Controllers
         // POST: ArticulosController/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(ArticuloVM articuloVM)
+        public IActionResult Edit( ArticuloVM articuloVM)
         {
+            ModelState.Remove("Articulo.Categoria");
+            ModelState.Remove("Articulo.UrlImagen");
+            ModelState.Remove(nameof(ArticuloVM.ListaCategorias));
+            string decodificado = WebUtility.HtmlDecode(articuloVM.Articulo.Descripcion);
             if (ModelState.IsValid)
             {
                 string rutaPrincipal = _webHostEnvironment.WebRootPath;
@@ -134,7 +139,7 @@ namespace BlogCore.Areas.Admin.Controllers
                     }
                     articuloVM.Articulo.UrlImagen = @"imagenes\articulos\" + nombreArchivo + extension;
                     articuloVM.Articulo.FechaCreacion = DateTime.Now;
-
+                    articuloVM.Articulo.Descripcion = decodificado;
 
                     _contenedorTrabajo.Articulo.Update(articuloVM.Articulo);
                     _contenedorTrabajo.Save();
@@ -144,6 +149,9 @@ namespace BlogCore.Areas.Admin.Controllers
                 else
                 {//cuando no queremos subir un archivo nuevo
                     articuloVM.Articulo.UrlImagen =articuloToUpdate.UrlImagen;
+                    articuloVM.Articulo.FechaCreacion = DateTime.Now;
+                    articuloVM.Articulo.Descripcion = decodificado;
+
                 }
                 _contenedorTrabajo.Articulo.Update(articuloVM.Articulo);
                 _contenedorTrabajo.Save();
@@ -169,7 +177,7 @@ namespace BlogCore.Areas.Admin.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            return Json(new { data = _contenedorTrabajo.Articulo.GetAll(includeProperties:"Categoria") });
+            return Json(new { data = _contenedorTrabajo.Articulo.GetAll(includeProperties:"Categoria")});
         }
 
         //ajax para usar el sweetalert

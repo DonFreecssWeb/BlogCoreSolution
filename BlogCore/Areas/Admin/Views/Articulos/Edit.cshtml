@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Editar Articulo";
+
+    
 }
 <br />
 <br />
@@ -9,8 +11,10 @@
 <h3>Editar artículo</h3>
 <form asp-action="Edit" method="post" enctype="multipart/form-data">
     <input type="hidden" asp-for="Articulo.Id"/>
+
     <div class="row px-2 offset-1 border">
         <div asp-validation-summary="All" class="text-danger"></div>
+
         <div class="col-8 mt-4">
             <div class="form-group row mb-3">
                 <div class="col-4">
@@ -74,7 +78,7 @@
         </div>
 
         <div class="col-4 pt-3">
-            <img src="@Model.Articulo.UrlImagen" width="300px" style="border-radius:5px; border: 1px solid #bbb9b9" alt="imagen" />
+            <img src="~/@Model.Articulo.UrlImagen" width="300px" style="border-radius:5px; border: 1px solid #bbb9b9" alt="imagen" />
         </div>
     </div>
 
@@ -89,12 +93,10 @@
     <script>
         tinymce.init({
             selector: 'textarea',
+            entity_encoding: 'raw',
             height: 500,
-            plugins: [
-                'lists'
-            ],
+            plugins: 'lists',
             menubar: 'file edit format'
-
         });
     </script>
 }

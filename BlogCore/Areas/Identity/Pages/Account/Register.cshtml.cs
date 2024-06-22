@@ -108,6 +108,7 @@ namespace BlogCore.Areas.Identity.Pages.Account
             public string ConfirmPassword { get; set; }
 
             [Required(ErrorMessage = "El teléfono es obligatorio")]
+            [Display(Name = "Teléfono")]
             public string PhoneNumber { get; set; }
 
             //campos custom del ApplicationUser

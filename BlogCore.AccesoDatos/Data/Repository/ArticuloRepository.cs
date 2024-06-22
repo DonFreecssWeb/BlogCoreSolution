@@ -17,6 +17,16 @@ namespace BlogCore.AccesoDatos.Data.Repository
         {
             _db = db;
         }
+
+        public IQueryable<Articulo> AsQueryable()
+        {
+            //Consultable, es parte de LINQ, permite consultar a la base de datos
+            //devuelve una instancia para consultar
+
+           //return  _db.Set<Articulo>().AsQueryable();
+           return _db.Articulo.AsQueryable();
+        }
+
         public void Update(Articulo articulo)
         {
             var articuloToUpdate = _db.Articulo.FirstOrDefault(s => s.Id == articulo.Id);

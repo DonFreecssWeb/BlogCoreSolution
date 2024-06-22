@@ -11,5 +11,8 @@ namespace BlogCore.AccesoDatos.Data.Repository.IRepository
     {
         
         void Update(Articulo categoria);
+
+        //Método para buscador
+        IQueryable<Articulo> AsQueryable();
     }
 }
