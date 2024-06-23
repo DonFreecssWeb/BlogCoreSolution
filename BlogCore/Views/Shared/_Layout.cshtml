@@ -19,15 +19,17 @@
 
         @* Boostswatch *@
         <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="#">Navbar</a>
+            <div class="container">
+                <a class="navbar-brand" href="/">
+                    <img src="~/imagenes/blogger.png" width="80px" />    
+                </a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto">
                         <li class="nav-item">
-                            <a class="nav-link active" href="#">
+                            <a class="nav-link active" href="/">
                                 Inicio
                                 <span class="visually-hidden">(current)</span>
                             </a>
@@ -48,12 +50,17 @@
                         </li>
                         }
                     </ul>
-                    <form class="d-flex" asp-controller="Home" asp-action="ResultadoBusqueda" method="get">
-                        <input class="form-control me-sm-2 text-dark" type="text" name="searchString"   placeholder="Texto a buscar">
-                        <button class="btn btn-secondary my-2 my-sm-0" type="submit">Buscar</button>
+                    <form class="busqueda d-flex" asp-controller="Home" asp-action="ResultadoBusqueda" method="get">
+                        <input class="form-control  text-dark" type="text" name="searchString"   placeholder="Texto a buscar">
+                        <div class="input-group">
+                            <button class="btn btn-success my-2 my-sm-0" type="submit">
+                               <i class="fas fa-search"></i>
+                            </button>
+                        </div>
                     </form>
+                    <partial name="_LoginPartial" />
                 </div>
-                <partial name="_LoginPartial" />
+                
             </div>
         </nav>
         
@@ -69,10 +76,17 @@
             @RenderBody()
         </main>
     </div>
+    
+    <!--Banner-->
+    <div class="container-fluid banner-container">
+        <div class="container banner-content">
+            <button type="button" class="btn btn-success subscribe-btn"> Suscríbete a nuestro blog</button>
+        </div>
+    </div>
 
-    <footer class="border-top footer text-muted">
-        <div class="container">
-            &copy; 2024 - BlogCore - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+    <footer class="border-top footer text-muted bg-dark" style="background-color: #1a1a1a !important;">
+        <div class="container py-4">
+            <span class="text-white"> &copy; 2024 - BlogCore -</span> <a class="text-white" href="/">Desarrollado por Jorge Martinez</a>
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>

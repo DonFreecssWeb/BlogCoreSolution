@@ -1,5 +1,6 @@
 
 using BlogCore.AccesoDatos;
+using BlogCore.AccesoDatos.Data.Inicializador;
 using BlogCore.AccesoDatos.Data.Repository;
 using BlogCore.AccesoDatos.Data.Repository.IRepository;
 using BlogCore.Models;
@@ -23,8 +24,10 @@ builder.Services.AddIdentity<ApplicationUser,IdentityRole>(options => options.Si
 builder.Services.AddControllersWithViews();
 
 //Agregar contenedor de trebajo al contenedor de IoC de DI
-
 builder.Services.AddScoped<IContenedorTrabajo, ContenedorTrabajo>();
+
+//Siembra de datos - step 1
+builder.Services.AddScoped<IInicializadorBD, InicializadorBD>();
 
 var app = builder.Build();
 
@@ -39,6 +42,9 @@ else
 }
 app.UseStaticFiles();
 
+//Siembra datos step 2
+SiembraDatos();
+
 app.UseRouting();
 
 app.UseAuthorization();
@@ -49,3 +55,12 @@ app.MapControllerRoute(
 app.MapRazorPages();
 
 app.Run();
+
+void SiembraDatos()
+{
+    using (var scope = app.Services.CreateScope())
+    {
+        var inicializarDB = scope.ServiceProvider.GetRequiredService<IInicializadorBD>();
+        inicializarDB.Inicializar();
+    }
+}

@@ -4,7 +4,7 @@
 }
 
 
-<div class="row ,mt-1">
+<div class="row mt-3">
     <div class="col-sm-12">
         <h1 class="text-center text-dark bg-secondary py-1">Desarrollador Jorge Martinez</h1>
     </div>
@@ -16,7 +16,7 @@
     <div class="row">
         @foreach(var articulo in Model.Articulos.OrderBy(o => o.Id))
         {
-            <div class="col-4">
+            <div class="col-sm-12 col-md-4">
                 <div class="card">
                     <img src="~/@articulo.UrlImagen" class="img-thumbnail" width="100%" />
                     <div class="card-body">

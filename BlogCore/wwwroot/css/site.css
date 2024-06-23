@@ -21,3 +21,39 @@ body {
   margin-bottom: 60px;
 }
 
+.navbar{
+    padding: 10px 0;
+}
+
+.busqueda .input-group{
+    display: flex;
+    align-items: center;
+}
+
+.busqueda .success {
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.banner-container{
+    position: relative;
+    height:70vh;
+    overflow: hidden;
+    background: url('../imagenes/fondo-banner.jpg') center no-repeat;
+    background-size: cover;
+}
+
+.banner-content{
+    position: absolute;
+    bottom:0;
+    left: 50%;
+    transform: translate(-50%);
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+.subscribe-btn{
+    padding: 15px 30px;
+    font-size: 32px;
+    border-radius: 14px;
+}
